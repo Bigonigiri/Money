@@ -260,7 +260,7 @@
 
   .wheel-shell{
     position:relative;
-    height:220px;
+    height:170px;
     border-radius:20px;
     overflow:hidden;
     background:
@@ -293,7 +293,7 @@
   .wheel-highlight{
     position:absolute;
     left:10px; right:10px;
-    top:82px;
+    top:57px;
     height:56px;
     border-radius:16px;
     background:linear-gradient(135deg,rgba(79,140,255,.22),rgba(109,93,252,.18));
@@ -307,13 +307,13 @@
     position:relative;
     z-index:2;
     display:grid;
-    grid-template-columns:1fr 1fr 1fr;
+    grid-template-columns:1fr 1fr;
     height:100%;
   }
 
   .wheel-col{
     position:relative;
-    height:220px;
+    height:170px;
     overflow-y:auto;
     scroll-snap-type:y mandatory;
     scrollbar-width:none;
@@ -321,7 +321,7 @@
   }
 
   .wheel-col::-webkit-scrollbar{display:none}
-  .wheel-spacer{height:82px}
+  .wheel-spacer{height:57px}
 
   .wheel-item{
     height:56px;
@@ -329,7 +329,7 @@
     justify-content:center;
     align-items:center;
     scroll-snap-align:center;
-    font-size:25px;
+    font-size:23px;
     color:#3f4758;
     font-weight:600;
     user-select:none;
@@ -338,14 +338,14 @@
 
   .wheel-item.active{
     color:white;
-    font-size:31px;
+    font-size:29px;
     font-weight:900;
     text-shadow:0 0 18px rgba(79,140,255,.35);
   }
 
   .unit-overlay{
     position:absolute;
-    top:82px;
+    top:57px;
     height:56px;
     z-index:3;
     pointer-events:none;
@@ -356,9 +356,8 @@
     align-items:center;
   }
 
-  .u-hour{left:27%}
-  .u-min{left:60%}
-  .u-sec{left:91%}
+  .u-hour{left:43%}
+  .u-min{left:92%}
 
   .add-segment{
     width:100%;
@@ -523,7 +522,7 @@
 
   @media(max-width:520px){
     .wrap{padding:14px 10px 34px}
-    h1{font-size:25px;margin-left:4px}
+    h1{font-size:23px;margin-left:4px}
     .card{border-radius:22px;padding:15px}
     .summary{gap:8px}
     .stat{min-height:88px;padding:13px}
@@ -689,7 +688,7 @@ function createWheelColumn(max, initial, onChange){
 
 function addSegment(initial={hours:0,minutes:0,seconds:0}){
   const id=nextSegmentId++;
-  const seg={id,hours:initial.hours||0,minutes:initial.minutes||0,seconds:initial.seconds||0};
+  const seg={id,hours:initial.hours||0,minutes:initial.minutes||0,seconds:0};
   segments.push(seg);
 
   const box=document.createElement('div');
@@ -724,15 +723,12 @@ function addSegment(initial={hours:0,minutes:0,seconds:0}){
 
   const hcol=createWheelColumn(23,seg.hours,v=>{seg.hours=v;updateDayTotal()});
   const mcol=createWheelColumn(59,seg.minutes,v=>{seg.minutes=v;updateDayTotal()});
-  const scol=createWheelColumn(59,seg.seconds,v=>{seg.seconds=v;updateDayTotal()});
-
-  grid.append(hcol,mcol,scol);
+  grid.append(hcol,mcol);
   shell.appendChild(grid);
 
   const uh=document.createElement('div');uh.className='unit-overlay u-hour';uh.textContent='時間';
   const um=document.createElement('div');um.className='unit-overlay u-min';um.textContent='分';
-  const us=document.createElement('div');us.className='unit-overlay u-sec';us.textContent='秒';
-  shell.append(uh,um,us);
+  shell.append(uh,um);
 
   box.appendChild(shell);
   $('segments').appendChild(box);
@@ -945,7 +941,7 @@ window.editEntry=function(id){
     ? e.segments
     : [{hours:Math.floor((e.workedSeconds||0)/3600),
         minutes:Math.floor(((e.workedSeconds||0)%3600)/60),
-        seconds:(e.workedSeconds||0)%60}];
+        seconds:0}];
 
   savedSegments.forEach(s=>addSegment({
     hours:Number(s.hours)||0,
@@ -992,7 +988,7 @@ $('addBtn').addEventListener('click',()=>{
   const newSegments=segments.map(s=>({
     hours:s.hours,
     minutes:s.minutes,
-    seconds:s.seconds
+    seconds:0
   }));
 
   const data={
